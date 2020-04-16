@@ -52,7 +52,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: secret
     volumes:
-      - /var/lib/mysql
+      - /var/lib/mysql57/data
     networks:
       - development-network
       
@@ -69,7 +69,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: secret
     volumes:
-      - /var/lib/mysql
+      - /var/lib/mysql/data
     networks:
       - development-network
       
@@ -98,6 +98,8 @@ services:
     #restart: always
     ports:
       - 6379:6379
+    volumes:
+      - /var/lib/redis/data
     networks:
       - development-network
 
@@ -114,6 +116,32 @@ services:
     depends_on:
       - redis
       
+  mongo:
+    image: mongo
+    #restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    volumes:
+      - /var/lib/mongo/data
+    networks:
+      - development-network
+
+  mongo-express:
+    image: mongo-express
+    #restart: always
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: secret
+    networks:
+      - development-network
+    depends_on:
+      - mongo
+      
   timescaledb:
     image: timescale/timescaledb:latest-pg11
     #restart: always
@@ -121,6 +149,8 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: secret
+    volumes:
+      - /var/lib/timescaledb/data
     networks:
       - development-network
 
