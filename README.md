@@ -14,7 +14,7 @@ This utilizes `docker-compose` to boot up all requirements and scripts. The `doc
 Additional files and scripts are located in `./.docker` for booting up the images and creating the according configuration.
 
 ### Setup
-Execute the `./.docker/create-certs.sh` script to create the required locallly certified SSL certificates with mkcert, which are passed to `nginx` as valid. 
+Execute the `./.docker/create-certs.sh` script to create the local certified SSL certificates with mkcert, which are passed to `nginx` as valid. 
 
 Ensure that your `.env` file is complete and correct before you run the containers. If you make changes to the `.env` you have to remove all containers `docker-compose down`, build them `docker-compose build` and run again. If you down containers, they are removed! Initial setup has to be repeated (e.g. database seeding etc.).
 
