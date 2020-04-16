@@ -1,6 +1,8 @@
 version: '3.7'
 
 services:
+  # Sample library at https://docs.docker.com/samples/library/adminer/ ff.
+
   # Spawns an nginx webserver with PHP-FPM and MySQL 5.7
   nginx:
     image: nginx:latest
@@ -39,6 +41,7 @@ services:
     networks:
       - development-network
 
+  # Relational Databases
   mysql57:
     image: mysql:5.7
     #restart: always
@@ -80,8 +83,35 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: secret
+      POSTGRES_USER: user
+      POSTGRES_DB: default
     volumes:
       - /var/lib/postgresql/data
+    networks:
+      - development-network
+      
+  mariadb:
+    image: mariadb
+    #restart: always
+    volumes:
+      - /var/lib/mariadb/data
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: default
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+    networks:
+      - development-network
+
+  mssql:
+    image: "mcr.microsoft.com/mssql/server"
+    #restart: always
+    ports:
+      - 1433:1433
+    environment:
+      SA_PASSWORD: secret
+      ACCEPT_EULA: Y
+      #MSSQL_PID: Express # Defaults to Developer edition, which is free for non-productive environments
     networks:
       - development-network
       
@@ -93,6 +123,7 @@ services:
     networks:
       - development-network
   
+  # Other Databases (NoSQL, Time series, In Memory, Caches etc.)
   redis:
     image: redis
     #restart: always
@@ -133,7 +164,7 @@ services:
     image: mongo-express
     #restart: always
     ports:
-      - 8082:8081
+      - 8081:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: secret
@@ -146,11 +177,66 @@ services:
     image: timescale/timescaledb:latest-pg11
     #restart: always
     ports:
-      - 5433:5432
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: secret
     volumes:
       - /var/lib/timescaledb/data
+    networks:
+      - development-network
+      
+  cassandra:
+    image: cassandra
+    ports:
+      - 9042:9042
+      - 7199:7199
+    networks:
+      - development-network
+
+  couchbase:
+    image: couchbase
+    deploy:
+      replicas: 1
+    ports:
+      - 8091:8091
+      - 8092:8092
+      - 8093:8093
+      - 8094:8094
+      - 11210:11210
+    networks:
+      - development-network
+
+  couchdb:
+    image: couchdb
+    environment:
+      COUCHDB_USER: user
+      COUCHDB_PASSWORD: secret
+    ports:
+      - 5984:5984
+      - 5986:5986
+    networks:
+      - development-network
+      
+  # Queues
+  rabbitmq:
+    image: rabbitmq:3-management
+    #restart: always
+    hostname: queue-dev
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_VM_MEMORY_HIGH_WATERMARK: 0.25
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: secret
+    networks:
+      - development-network
+
+  # Others
+  solr:
+    image: solr
+    ports:
+      - 8983:8983
     networks:
       - development-network
 
