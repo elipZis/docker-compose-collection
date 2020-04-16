@@ -20,7 +20,7 @@ services:
       - development-network
     depends_on:
       - php
-      - mysql
+      - mysql57
     
   php:    
     build: 
@@ -39,7 +39,7 @@ services:
     networks:
       - development-network
 
-  mysql:
+  mysql57:
     image: mysql:5.7
     #restart: always
     ports:
@@ -53,6 +53,43 @@ services:
       MYSQL_PASSWORD: secret
     volumes:
       - /var/lib/mysql
+    networks:
+      - development-network
+      
+  mysql:
+    image: mysql
+    #restart: always
+    ports:
+      - 3306:3306
+      - 33060:33060
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: default
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+    volumes:
+      - /var/lib/mysql
+    networks:
+      - development-network
+      
+  postgres:
+    image: postgres
+    #restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - /var/lib/postgresql/data
+    networks:
+      - development-network
+      
+  adminer:
+    image: adminer
+    #restart: always
+    ports:
+      - 8080:8080
     networks:
       - development-network
   
