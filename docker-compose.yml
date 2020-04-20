@@ -72,7 +72,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: secret
     volumes:
-      - /var/lib/mysql/data
+      - /var/lib/mysql
     networks:
       - development-network
       
