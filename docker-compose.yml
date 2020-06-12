@@ -90,6 +90,17 @@ services:
     networks:
       - development-network
       
+  pgadmin4:
+    image: dpage/pgadmin4
+    #restart: always
+    ports:
+      - 5433:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: secret
+    networks:
+      - development-network
+      
   mariadb:
     image: mariadb
     #restart: always
