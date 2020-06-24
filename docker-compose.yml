@@ -196,6 +196,18 @@ services:
     networks:
       - development-network
       
+  timescaledb-postgis:
+    image: timescale/timescaledb-postgis:latest-pg12
+    #restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - /var/lib/timescaledb-postgis/data
+    networks:
+      - development-network
+      
   cassandra:
     image: cassandra
     ports:
