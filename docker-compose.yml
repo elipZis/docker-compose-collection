@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   # Sample library at https://docs.docker.com/samples/library/adminer/ ff.
@@ -237,6 +237,24 @@ services:
     ports:
       - 5984:5984
       - 5986:5986
+    networks:
+      - development-network
+
+  dynamodb-local:
+    command: "-jar DynamoDBLocal.jar -sharedDb -optimizeDbBeforeStartup -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+    networks:
+      - development-network
+      
+  dynamodb-manager:
+    image: taydy/dynamodb-manager
+    ports:
+      - "8080:80"
     networks:
       - development-network
       
